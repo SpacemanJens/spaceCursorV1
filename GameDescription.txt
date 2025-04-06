@@ -1,0 +1,136 @@
+Overall description:
+I need to build a Realtime multiplayer strategy game called Space Stratego (like the board game) where two teams play against each other. It can be used as Friday fun activity in companies where two teams can play against each other while each team has a team call where strategy can be discuss doing the game.
+
+Technology used:
+It is  implemented in p5js and use the p5party library for handing multiplayer functionality.
+
+The code for connecting is:
+partyConnect("wss://p5js-spaceman-server-29f6636dfb6c.herokuapp.com", "jkv-spaceStratego);
+
+shared = partyLoadShared("shared", {
+gameState: “GAME-SETUP”,
+});
+me = partyLoadMyShared({
+playerName: "observer",
+});
+guests = partyLoadGuestShareds();
+
+Programming style:
+The code must at all times be kept clean and organised and the logic implemented using an object oriented programming style with classes like Spacecraft, Canon, DecorativeBackgroundStar, DecorativeOrangeBackgroundStar, StarSystem, StarSystemYellowStar, StarSystemBlackHole and StarSystemPlanet.
+
+Only the client that is assigned to be the HOST (by the p5party framework) updates the shared variable. Examples of shared data is the gameState, win counters, data for hovering canons, data for moving spiders, the game timer and randomly chosen spawn planets for the two teams.
+
+The screen width is 2000 and the screen height 1200. It is divided into these areas:
+
+Game background area:
+The whole background must be a twinkling star background. Furthermore, it must show the decorative background stars and the decorative orange background star.
+
+Decorative background stars:
+There are 20 randomly located decorative background stars. They can glow and they can go super nova. When going super nova it increases very quickly in size and explode in a bright flash. The animation takes around 2 seconds.
+
+Decorative orange background star:
+There is 1 decorative orange background star with a fixed location and it can glow.
+
+Game setup area:
+A ring (radius 400) of 20 small images show in the middle of the screen. In the middle of the ring there is a text describing the aim of the game and the key controls for player movement. Under this text there is a field for entering the players first name and under this there are two buttons for joining each of the teams (hidden if no name as been entered). The small images have a size of 120x 120. When hovering a small image, then a larger version of that image with size 800x800 shows next to the circle of smaller images and one of the decorative background stars glows. When clicking on a smaller image, then the glowing decorative background star goes super nova. The large images have animations. When hovering a button to select a team the yellow background star glows and when selecting a team 20 small spacecraft icons zooms to the glowing decorative orange background star.
+
+Character selection area:
+This area is located on the left hand side of the screen. Here 40 stratego characters for the team are displayed with their name (from the board game) and rank in the bracket. The players on the blue team can see the characters for the blue team and the players for the green team can see the characters for the green team. When a player has selected a character the players name is displayed next to that character.
+
+Host area:
+This area is located in the lower lefter corner of the screen. Is shows the text XXX is Host, where XXX is the name of the host. The text be “I am host” for the player acting as a host.
+
+Status area:
+This area is located in the top middle part of the screen. It shows info messages.
+
+Game area:
+In this area is located in the upper left coordinate at 600x50 and it has the size 1200x700. The game area shows a crop’ed part of an image representing a planet. The image shows a surface of a planet in a ring shape and outside the ring is transparent. Here players move their character around within the boundary of the circle representing the size of the planet.
+
+Minimap area:
+This area is located under the Game area. It shows a star system consisting of an orbiting star and black hole as a center and around the center there is 5 orbiting planets of different sizes. The perspective is tilted. When the planets orbit the center they look smaller when they are far away from the observer. The planets act as minimaps showing a small blue dot for players on blue team and a small green dot for players on the green team. A players own dot is a bit bigger and darker that other players dots.
+
+Statistics area:
+This area is located in the upper right corer of the screen. Here the following statistics is displayed:
+
+- How many times each of the two teams has won.
+
+- How many players there are on the blue team. When hovering this text a list of player names that are on the blue team shows.
+
+- How many players there are on the green team. When hovering this text a list of player names that are on the blue team shows.
+
+- Number of observers (If any)
+
+Player controls area:
+This area is located under the Statistics area (outside the Game area). It description how to control the character on the game area. The text must be: “Keys WASD moves around on the planet and TFGH moves around on the visible part. Click to shoot (only available for some characters).
+
+Characters details area:
+This area is located under the Planer controls area. It shows a list of images of the characters and their rank. Further more it states that the Spy wins over the Marchal, Bomb win over every one except the Minor, both looses for equal rank, that the game is a draw if the two Flags battle and that the game is won if battling the opponents Flag.
+
+Here is a description of the game states:
+
+Game state GAME-SETUP:
+The Game setup area, Statistics area and Host area initially shows. This is the initial game state. A player can enter a name.  When the name has been entered, then a light blue and light green button shows. If 13 players have joined a team, the button for joining the team is removed and there will be a text stating that it is not possible to join because there is no space for more players. When a player choses a team by pressing one of the two buttons, then the Character selection area, Host area, Status area, Game area, Minimap area, Statistics area, Player controls area and Character details area shows. To start with only the Flag can be chosen and the other characters are disabled. A player chooses the Flag by clicking on the text Flag representing the Stratego Flag character from the Stratego character list in the Character selection area. When the Flag has been chosen, then the other characters are enabled. Players can now click on one of the other Stratego character names in the list shown in the Character selection area. The list of characters in the Character selection area will therefore be populated with names of players on that team. When a player chooses a character, then it is disabled for all players. When a player on each team has chosen the Flag as a character, the client acting as a HOST will have a button with the text “Start game”. When clicking this the game state changes to IN-GAME. New players join the game by choosing a team no matter what game state the game is in. They spawn on the same planet as that team spawned on. Players that cannot choose a team because of too many players will only see the Game setup area, Statistics area and Host area.
+
+Here is an overview of the info messages for this game state. If no players on a team has selected the Flag, then the info text “A player from your team must select the Flag” shows in the Status area. If the player has not selected a character and the Flag has been selected by another player on the team, then the info text “Please choose a character”. If a character has been chosen and no players on the opponent team has selected the Flag, then the info text must be “Waiting for the other team to select the Flag…”. If a player has chosen a character and both teams have selected the Flag, then the info message must be “Waiting for XXX (Host) to start the game”, where XXX is the name of the host.
+
+Game state IN-GAME:
+Character selection area, Host area, Status area, Game area, Minimap area, Statistics area, Player controls area and Character details area shows. Players on the same team will spawn on the same planet and players on each team will spawn on different but randomly chosen planets. The players can move freely aground on the game. If two players on different teams touch each other, then there is a battle. If there is no characters to choose from in the character list, then the player not have a character in the game area but visually follow the flag on the Game area. They can see the same as the Player controlling the Flag can see without being able to perform any actions.
+
+Game state GAME-FINISHED:
+The Character selection area, Host area, Status area, Game area, Minimap area, Statistics areal, Player controls area, Character details area shows. When the game has finishes, then a random star will go super nova. It is with big letter in the middle of the screen displayed which team has won the game. The client acting as a HOST will have a button with the text “Prepare new game”. Clicking this button resets all shared game data except the win counters in the shared data and the game state changes to GAME-SETUP. When the game state changes to GAME-FINISHED, then each player resets all data except the name.
+
+Here is a description of different game mechanics:
+
+Spacecraft mechanics:
+A character is represented by an image of a spacecraft and it has a size represented by a circle. Before the first battle players on the opponent team sees the character as a blue/green glowing half transparent cloaked spacecraft and after the first battle the spacecrafts shows as they real characters with a blue/green glow. The Marshal can shoot up to 2 bullets at a time. Bullets move toward where the player clicks on the game area. Bullets are removed if they hit a target or if they fly out of the visible area. If hitting an opponent from another team, then the opponent is not able to move for 5 seconds.
+
+Movement mechanics:
+The keys WASD controls the global coordinates for moving the player around on the planet and the keys TFGH controls the local coordinates moving the player around within the crop’ed part of the planet. The players combined position must be contained to the size of the planet. The Flag and Bombs can move as well.
+
+Battle mechanics:
+Players that are in battle cannot move, character cards for each of them shows next to the players in battle and a battle resolution message shows in the Status area. Only the two players in battle can see the character cards. A character card has an image of the character as well as the name and rank of that character.
+
+The character with the highest rank wins except for the Spy that wins against the Marshal and the Bomb win over every one except the Minor. Both looses for equal rank and the game. It is a draw if the two Flags battle and the game is won if battling the opponents Flag.
+
+We have the following battle outcomes:
+
+- If a player looses, then the info message is “You are a XXX and lost to a YYY. Please click the mouse button to continue”. Here XXX is the players character name and YYY is the opponents character name. When clicking the mouse only the players own character on the Game area and on the list of character to the left is removed. The player can now choose a new free character from the Character selection area. The spacecraft images of the two players in battle will stay the same until the mouse has been clicked.
+
+- If draw, then the behaviour is the same as if one looses except the info message be “You are a XXX and had a draw with a YYYY. Please click the mouse to continue”. Here XXX is the players character name and YYY is the opponents character name. When clicking the mouse only the players own character on the Game area and on the list of character to the left is removed. The player can now choose a new free character from the Character selection area. The spacecraft images of the two players in battle will stay the same until the mouse has been clicked.
+
+- If a player wins, then the info message is “You are a XXX and have won against YYY. Please click the mouse button to continue”. Here XXX is the players character name and YYY is the opponents character name. When clicking the mouse the player is once again able to move.
+
+- If the two flags battle, then the game has finished with a draw. As soon a they touch each other, then players are not able to move and all players have the big text “The game ended in a draw”.
+
+- If a player (that is not the Flag) touches the Flag from the other team, then the team has won the game. As soon as they touch each other, then players are not able to move and all players have the big text “Team XXX has won the game” displayed where XXX is the name of the winning team.
+
+When the Flag is involved in a battle, then the game state changes to GAME-FINISHED.
+
+Warp gate mechanics:
+Each planet has an up warp gate and a down warp gate. The location of the warp gates are fixed on each planet. When moving into an up warp gate, the player is transferred to the up warp gate on the planet with a higher planet index. The up warp gate on the planet with the highest planet index transfers the player to up warp gate of the planet with the lowest planet index. Similarly there is a down warp gate on each planet. Warp gates have cool down of 10 seconds before any warp gates can be used.. The warp gates have a pulsation or rotation animation. When moving into a warp gate there is a little delay before warping. Just before warping one of the decorative background stars will go supernova so there will be a bright flash at the exact warp moment. Each warp game must have different decorative background star to go super nova.
+
+Flying canon mechanics:
+The planet with index 0 has three hovering canons and they are located at three random locations. Each of them shoots bullets at the nearest player. When hit the player is not able to move for 5 seconds. The hovering canons are not shooting a players that are not able to move because they have been hit.The bullets only have a range of 300. Data for the hovering canons and their bullets are stored in the shared variable.
+
+Passive object animations:
+Selected object on the planets has animations to make the game more visual nice. Water glitters, light beamers pulsates etc.
+
+Active objects:
+The planet with index 4 has a spiders walking around. The planet has a hidden grey scale image dictating the topology of the image. A spider must look small when the greyscale image is dark and bigger where it is lighter. The size of the spider dynamically change depending on where it is waking on the hidden greyscale image. When touching the spider that has the biggest possible size, the player has lost and is removed from the game. If the Flag touches the spider the team has lost the game.
+
+Artefacts will show up from time to time. After 10 minutes they will start to show up more and more frequently. When catching an artefact a player gets one of the following abilities for a period of time:
+
+- The player is able to shoot
+
+- The shots have faster speed
+
+- The movement of the player is faster
+
+- The ability to jump by clicking on the game area
+
+- Have shield so bullets have no effect
+
+- Be cloaked so the spacecraft is nearly invisible
+
+Resources:
+All images are available and ready for use.
